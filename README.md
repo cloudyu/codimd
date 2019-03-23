@@ -255,6 +255,7 @@ There are some config settings you need to change in the files below.
 | `CMD_MINIO_ENDPOINT` | `minio.example.org` | Address of your Minio endpoint/instance |
 | `CMD_MINIO_PORT` | `9000` | Port that is used for your Minio instance |
 | `CMD_MINIO_SECURE` | `true` | If set to `true` HTTPS is used for Minio |
+| `CMD_MINIO_CND` | no example | CDN Domain for Minio |
 | `CMD_AZURE_CONNECTION_STRING` | no example | Azure Blob Storage connection string |
 | `CMD_AZURE_CONTAINER` | no example | Azure Blob Storage container name (automatically created if non existent) |
 | `CMD_HSTS_ENABLE` | ` true`  | set to enable [HSTS](https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security) if HTTPS is also enabled (default is ` true`) |
