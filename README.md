@@ -1,7 +1,7 @@
 CodiMD
 ===
 
-[![#CodiMD on matrix.org][matrix.org-image]][matrix.org-url]
+[![CodiMD on Gitter][gitter-image]][gitter-url]
 [![build status][travis-image]][travis-url]
 [![version][github-version-badge]][github-release-page]
 [![POEditor][poeditor-image]][poeditor-url]
@@ -24,8 +24,6 @@ Thanks for using! :smile:
     - [Instructions](#instructions)
   - [Heroku Deployment](#heroku-deployment)
   - [Kubernetes](#kubernetes)
-  - [CodiMD by docker container](#codimd-by-docker-container)
-  - [Cloudron](#cloudron)
 - [Upgrade](#upgrade)
   - [Native setup](#native-setup)
 - [Configuration](#configuration)
@@ -42,11 +40,9 @@ Thanks for using! :smile:
 
 # HackMD CE became CodiMD
 
-CodiMD was recently renamed from its former name was HackMD. CodiMD is the free software version of HackMD. It was the original Version of HackMD. The HackMD team initiated CodiMD and provided a solid code base. Due to the need of paying bills, A fork was created and called HackMD EE, which is a SaaS (Software as a Service) product available at [hackmd.io](https://hackmd.io).
+CodiMD was recently renamed from its former name was HackMD. CodiMD is the free software version of HackMD. HackMD EE, which is a SaaS (Software as a Service) product available at [hackmd.io](https://hackmd.io).
 
 We decided to change the name to break the confusion between HackMD and CodiMD, formally known as HackMD CE, as it never was an open core project.
-
-Just to more confusion: We are still friends with HackMD :heart:
 
 *For the whole renaming story, see the [related issue](https://github.com/hackmdio/hackmd/issues/720)*
 
@@ -68,6 +64,7 @@ Just to more confusion: We are still friends with HackMD :heart:
 - Node.js 6.x or up (test up to 7.5.0) and <10.x
 - Database (PostgreSQL, MySQL, MariaDB, SQLite, MSSQL) use charset `utf8`
 - npm (and its dependencies, especially [uWebSockets](https://github.com/uWebSockets/uWebSockets#nodejs-developers), [node-gyp](https://github.com/nodejs/node-gyp#installation))
+- `libssl-dev` for building scrypt (see [here](https://github.com/ml1nk/node-scrypt/blob/master/README.md#installation-instructions) for further information)
 - For **building** CodiMD we recommend to use a machine with at least **2GB** RAM
 
 ### Instructions
@@ -82,7 +79,7 @@ Just to more confusion: We are still friends with HackMD :heart:
 7. Run `node_modules/.bin/sequelize db:migrate`, this step will migrate your db to the latest schema
 8. Run the server as you like (node, forever, pm2)
 
-To stay up to date with your installation it's recommended to join our [Matrix channel][matrix.org-url] or subscribe to the [release feed][github-release-feed].
+To stay up to date with your installation it's recommended to subscribe the [release feed][github-release-feed].
 
 ## Heroku Deployment
 
@@ -98,33 +95,18 @@ To install use `helm install stable/hackmd`.
 
 For all further details, please check out the offical CodiMD  [K8s helm chart](https://github.com/kubernetes/charts/tree/master/stable/hackmd).
 
-## CodiMD by docker container
-[![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](http://play-with-docker.com?stack=https://github.com/hackmdio/codimd-container/raw/master/docker-compose.yml&stack_name=codimd)
-
-
 **Debian-based version:**
 
 [![latest](https://images.microbadger.com/badges/version/hackmdio/hackmd:latest.svg)](https://microbadger.com/images/hackmdio/hackmd "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/hackmdio/hackmd:latest.svg)](https://microbadger.com/images/hackmdio/hackmd "Get your own image badge on microbadger.com")
 
-
-**Alpine-based version:**
-
-[![alpine](https://images.microbadger.com/badges/version/hackmdio/hackmd:alpine.svg)](https://microbadger.com/images/hackmdio/hackmd:alpine "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/hackmdio/hackmd:alpine.svg)](https://microbadger.com/images/hackmdio/hackmd:alpine "Get your own image badge on microbadger.com")
-
 The easiest way to setup CodiMD using docker are using the following three commands:
 
 ```console
-git clone https://github.com/hackmdio/codimd-container.git
-cd codimd-container
+git clone https://github.com/hackmdio/docker-hackmd.git
+cd docker-hackmd
 docker-compose up
 ```
-Read more about it in the [container repository…](https://github.com/hackmdio/codimd-container)
-
-## Cloudron
-
-Install CodiMD on [Cloudron](https://cloudron.io):
-
-[![Install](https://cloudron.io/img/button.svg)](https://cloudron.io/button.html?app=io.hackmd.cloudronapp)
+Read more about it in the [container repository…](https://github.com/hackmdio/docker-hackmd)
 
 # Upgrade
 
@@ -141,7 +123,7 @@ If you are upgrading CodiMD from an older version, follow these steps:
 6. Run `node_modules/.bin/sequelize db:migrate`, this step will migrate your db to the latest schema
 7. Start your whole new server!
 
-To stay up to date with your installation it's recommended to join our [Matrix channel][matrix.org-url] or subscribe to the [release feed][github-release-feed].
+To stay up to date with your installation it's recommended to subscribe the [release feed][github-release-feed].
 
 * **migrate-to-1.1.0**
 
@@ -250,12 +232,12 @@ There are some config settings you need to change in the files below.
 | `CMD_S3_SECRET_ACCESS_KEY` | no example | AWS secret key |
 | `CMD_S3_REGION` | `ap-northeast-1` | AWS S3 region |
 | `CMD_S3_BUCKET` | no example | AWS S3 bucket name |
+| `CMD_S3_ENDPOINT` | s3.example.com | custom AWS S3 endpoint |
 | `CMD_MINIO_ACCESS_KEY` | no example | Minio access key |
 | `CMD_MINIO_SECRET_KEY` | no example | Minio secret key |
 | `CMD_MINIO_ENDPOINT` | `minio.example.org` | Address of your Minio endpoint/instance |
 | `CMD_MINIO_PORT` | `9000` | Port that is used for your Minio instance |
 | `CMD_MINIO_SECURE` | `true` | If set to `true` HTTPS is used for Minio |
-| `CMD_MINIO_CDN` | no example | CDN Domain for Minio |
 | `CMD_AZURE_CONNECTION_STRING` | no example | Azure Blob Storage connection string |
 | `CMD_AZURE_CONTAINER` | no example | Azure Blob Storage container name (automatically created if non existent) |
 | `CMD_HSTS_ENABLE` | ` true`  | set to enable [HSTS](https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security) if HTTPS is also enabled (default is ` true`) |
@@ -371,12 +353,12 @@ See more at [http://operational-transformation.github.io/](http://operational-tr
 
 **License under AGPL.**
 
-[matrix.org-image]: https://img.shields.io/badge/Matrix.org-%23CodiMD@matrix.org-green.svg
-[matrix.org-url]: https://riot.im/app/#/room/#codimd:matrix.org
+[gitter-image]: https://img.shields.io/badge/gitter-hackmdio/codimd-blue.svg
+[gitter-url]: https://gitter.im/hackmdio/hackmd
 [travis-image]: https://travis-ci.org/hackmdio/codimd.svg?branch=master
 [travis-url]: https://travis-ci.org/hackmdio/codimd
 [github-version-badge]: https://img.shields.io/github/release/hackmdio/codimd.svg
 [github-release-page]: https://github.com/hackmdio/codimd/releases
 [github-release-feed]: https://github.com/hackmdio/codimd/releases.atom
 [poeditor-image]: https://img.shields.io/badge/POEditor-translate-blue.svg
-[poeditor-url]: https://poeditor.com/join/project/1OpGjF2Jir
+[poeditor-url]: https://poeditor.com/join/project/q0nuPWyztp
