@@ -1,5 +1,5 @@
 /* eslint-env browser, jquery */
-/* global moment, serverurl */
+/* global moment, serverurl, plantumlServer */
 
 import Prism from 'prismjs'
 import hljs from 'highlight.js'
@@ -31,6 +31,8 @@ require('prismjs/components/prism-gherkin')
 require('./lib/common/login')
 require('../vendor/md-toc')
 var Viz = require('viz.js')
+const plantumlEncoder = require('plantuml-encoder')
+
 const ui = getUIElements()
 
 // auto update last change
@@ -348,7 +350,7 @@ export function finishView (view) {
       $value.html('')
       chart.drawSVG(value, {
         'line-width': 2,
-        'fill': 'none',
+        fill: 'none',
         'font-size': '16px',
         'font-family': "'Andale Mono', monospace"
       })
@@ -387,19 +389,14 @@ export function finishView (view) {
       var $value = $(value)
       const $ele = $(value).closest('pre')
 
-      window.mermaid.mermaidAPI.parse($value.text())
+      window.mermaid.parse($value.text())
       $ele.addClass('mermaid')
       $ele.html($value.text())
       window.mermaid.init(undefined, $ele)
     } catch (err) {
-      var errormessage = err
-      if (err.str) {
-        errormessage = err.str
-      }
-
       $value.unwrap()
-      $value.parent().append(`<div class="alert alert-warning">${escapeHTML(errormessage)}</div>`)
-      console.warn(errormessage)
+      $value.parent().append(`<div class="alert alert-warning">${escapeHTML(err.str)}</div>`)
+      console.warn(err)
     }
   })
   // abc.js
@@ -419,6 +416,32 @@ export function finishView (view) {
     } catch (err) {
       $value.unwrap()
       $value.parent().append(`<div class="alert alert-warning">${escapeHTML(err)}</div>`)
+      console.warn(err)
+    }
+  })
+  // vega-lite
+  const vegas = view.find('div.vega.raw').removeClass('raw')
+  vegas.each((key, value) => {
+    try {
+      var $value = $(value)
+      var $ele = $(value).parent().parent()
+
+      const specText = $value.text()
+
+      $value.unwrap()
+      window.vegaEmbed($ele[0], JSON.parse(specText))
+        .then(result => {
+          $ele.addClass('vega')
+        })
+        .catch(err => {
+          $ele.append(`<div class="alert alert-warning">${escapeHTML(err)}</div>`)
+          console.warn(err)
+        })
+        .finally(() => {
+          if (window.viewAjaxCallback) window.viewAjaxCallback()
+        })
+    } catch (err) {
+      $ele.append(`<div class="alert alert-warning">${escapeHTML(err)}</div>`)
       console.warn(err)
     }
   })
@@ -542,6 +565,12 @@ export function finishView (view) {
   } catch (err) {
     console.warn(err)
   }
+
+  // register details toggle for scrollmap recalulation
+  view.find('details.raw').removeClass('raw').each(function (key, val) {
+    $(val).on('toggle', window.viewAjaxCallback)
+  })
+
   // render title
   document.title = renderTitle(view)
 }
@@ -744,12 +773,12 @@ export function generateToc (id) {
   target.html('')
   /* eslint-disable no-unused-vars */
   var toc = new window.Toc('doc', {
-    'level': 3,
-    'top': -1,
-    'class': 'toc',
-    'ulClass': 'nav',
-    'targetId': id,
-    'process': getHeaderContent
+    level: 3,
+    top: -1,
+    class: 'toc',
+    ulClass: 'nav',
+    targetId: id,
+    process: getHeaderContent
   })
   /* eslint-enable no-unused-vars */
   if (target.text() === 'undefined') { target.html('') }
@@ -832,7 +861,7 @@ const linkifyAnchors = (level, containingElement) => {
   const headers = containingElement.getElementsByTagName(`h${level}`)
 
   for (let i = 0, l = headers.length; i < l; i++) {
-    let header = headers[i]
+    const header = headers[i]
     if (header.getElementsByClassName('anchor').length === 0) {
       if (typeof header.id === 'undefined' || header.id === '') {
         // to escape characters not allow in css and humanize
@@ -891,12 +920,12 @@ export function renderTOC (view) {
     const target = $(`#${id}`)
     target.html('')
     /* eslint-disable no-unused-vars */
-    let TOC = new window.Toc('doc', {
-      'level': 3,
-      'top': -1,
-      'class': 'toc',
-      'targetId': id,
-      'process': getHeaderContent
+    const TOC = new window.Toc('doc', {
+      level: 3,
+      top: -1,
+      class: 'toc',
+      targetId: id,
+      process: getHeaderContent
     })
     /* eslint-enable no-unused-vars */
     if (target.text() === 'undefined') { target.html('') }
@@ -923,6 +952,8 @@ function highlightRender (code, lang) {
     return `<div class="mermaid raw">${code}</div>`
   } else if (lang === 'abc') {
     return `<div class="abc raw">${code}</div>`
+  } else if (lang === 'vega') {
+    return `<div class="vega raw">${code}</div>`
   }
   const result = {
     value: code
@@ -944,7 +975,7 @@ function highlightRender (code, lang) {
   return result.value
 }
 
-export let md = markdownit('default', {
+export const md = markdownit('default', {
   html: true,
   breaks: true,
   langPrefix: '',
@@ -996,8 +1027,24 @@ md.use(markdownitContainer, 'success', { render: renderContainer })
 md.use(markdownitContainer, 'info', { render: renderContainer })
 md.use(markdownitContainer, 'warning', { render: renderContainer })
 md.use(markdownitContainer, 'danger', { render: renderContainer })
+md.use(markdownitContainer, 'spoiler', {
+  validate: function (params) {
+    return params.trim().match(/^spoiler\s+(.*)$/)
+  },
+  render: function (tokens, idx) {
+    var m = tokens[idx].info.trim().match(/^spoiler\s+(.*)$/)
 
-let defaultImageRender = md.renderer.rules.image
+    if (tokens[idx].nesting === 1) {
+      // opening tag
+      return '<details><summary>' + md.utils.escapeHtml(m[1]) + '</summary>\n'
+    } else {
+      // closing tag
+      return '</details>\n'
+    }
+  }
+})
+
+const defaultImageRender = md.renderer.rules.image
 md.renderer.rules.image = function (tokens, idx, options, env, self) {
   tokens[idx].attrJoin('class', 'raw')
   return defaultImageRender(...arguments)
@@ -1041,6 +1088,33 @@ md.renderer.rules.fence = (tokens, idx, options, env, self) => {
   return `<pre><code${self.renderAttrs(token)}>${highlighted}</code></pre>\n`
 }
 
+const makePlantumlURL = (umlCode) => {
+  const format = 'svg'
+  const code = plantumlEncoder.encode(umlCode)
+  return `${plantumlServer}/${format}/${code}`
+}
+
+// https://github.com/qjebbs/vscode-plantuml/tree/master/src/markdown-it-plantuml
+md.renderer.rules.plantuml = (tokens, idx) => {
+  const token = tokens[idx]
+  if (token.type !== 'plantuml') {
+    return tokens[idx].content
+  }
+
+  const url = makePlantumlURL(token.content)
+  return `<img src="${url}" />`
+}
+
+// https://github.com/qjebbs/vscode-plantuml/tree/master/src/markdown-it-plantuml
+md.core.ruler.push('plantuml', (state) => {
+  const blockTokens = state.tokens
+  for (const blockToken of blockTokens) {
+    if (blockToken.type === 'fence' && blockToken.info === 'plantuml') {
+      blockToken.type = 'plantuml'
+    }
+  }
+})
+
 // youtube
 const youtubePlugin = new Plugin(
   // regexp to match
@@ -1065,7 +1139,7 @@ const vimeoPlugin = new Plugin(
   /{%vimeo\s*([\d\D]*?)\s*%}/,
 
   (match, utils) => {
-    const videoid = match[1]
+    const videoid = match[1].split(/[?&=]+/)[0]
     if (!videoid) return
     const div = $('<div class="vimeo raw"></div>')
     div.attr('data-videoid', videoid)
@@ -1080,7 +1154,7 @@ const gistPlugin = new Plugin(
   /{%gist\s*([\d\D]*?)\s*%}/,
 
   (match, utils) => {
-    const gistid = match[1]
+    const gistid = match[1].split(/[?&=]+/)[0]
     const code = `<code data-gist-id="${gistid}"></code>`
     return code
   }
@@ -1098,7 +1172,7 @@ const slidesharePlugin = new Plugin(
   /{%slideshare\s*([\d\D]*?)\s*%}/,
 
   (match, utils) => {
-    const slideshareid = match[1]
+    const slideshareid = match[1].split(/[?&=]+/)[0]
     const div = $('<div class="slideshare raw"></div>')
     div.attr('data-slideshareid', slideshareid)
     return div[0].outerHTML
