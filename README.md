@@ -1,7 +1,6 @@
 CodiMD
 ===
 
-[![CodiMD on Gitter][gitter-image]][gitter-url]
 [![build status][travis-image]][travis-url]
 [![version][github-version-badge]][github-release-page]
 [![Gitter][gitter-image]][gitter-url]
@@ -9,6 +8,8 @@ CodiMD
 
 CodiMD lets you collaborate in real-time with markdown.
 Built on [HackMD](https://hackmd.io) source code, CodiMD lets you host and control your team's content with speed and ease.
+
+![screenshot](https://raw.githubusercontent.com/hackmdio/codimd/develop/public/screenshot.png)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -43,14 +44,14 @@ HackMD team is committed to keep CodiMD open source. All contributions are welco
 You would find all documentation here: [CodiMD Documentation](https://hackmd.io/c/codimd-documentation)
 
 ### Deployment
-If you want to spin up an instance and start using immediately, see [Docker deployment](https://hackmd.io/c/codimd-documentation/%2Fs%2Fcodimd-documentation#Deployment).
+If you want to spin up an instance and start using immediately, see [Docker deployment](https://hackmd.io/c/codimd-documentation/%2Fs%2Fcodimd-docker-deployment).
 If you want to contribute to the project, start with [manual deployment](https://hackmd.io/c/codimd-documentation/%2Fs%2Fcodimd-manual-deployment).
 
 ### Configuration
 CodiMD is highly customizable, learn about all configuration options of networking, security, performance, resources, privilege, privacy, image storage, and authentication in [CodiMD Configuration](https://hackmd.io/c/codimd-documentation/%2Fs%2Fcodimd-configuration).
 
 ### Upgrading and Migration
-Upgrade CodiMD from previous version? See [this guide](https://hackmd.io/c/codimd-documentation/%2Fs%2Fcodimd-upgrade)
+Upgrade CodiMD from previous version? See [this guide](https://hackmd.io/c/codimd-documentation/%2Fs%2Fcodimd-upgrade)<br>
 Migrating from Etherpad? Follow [this guide](https://hackmd.io/c/codimd-documentation/%2Fs%2Fcodimd-migration-etherpad)
 
 ### Developer
@@ -72,20 +73,11 @@ All contributions are welcome! Even asking a question helps.
 ## Browser Support
 
 CodiMD is a service that runs on Node.js, while users use the service through browsers. We support your users using the following browsers: 
-- ![Chrome](http://browserbadge.com/chrome/47/18px)
-    - Chrome >= 47
-    - Chrome for Android >= 47
-- ![Safari](http://browserbadge.com/safari/9/18px)
-    - Safari >= 9
-    - iOS Safari >= 8.4
-- ![Firefox](http://browserbadge.com/firefox/44/18px)
-    - Firefox >= 44
-- ![IE](http://browserbadge.com/ie/9/18px)
-    - IE >= 9
-    - Edge >= 12
-- ![Opera](http://browserbadge.com/opera/34/18px)
-    - Opera >= 34
-    - Opera Mini not supported
+- <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png" alt="Chrome" width="24px" height="24px" /> Chrome >= 47, Chrome for Android >= 47
+- <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png" alt="Safari" width="24px" height="24px" /> Safari >= 9, iOS Safari >= 8.4
+- <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png" alt="Firefox" width="24px" height="24px" /> Firefox >= 44
+- <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" /> IE >= 9, Edge >= 12
+- <img src="https://raw.githubusercontent.com/alrra/browser-logos/master/src/opera/opera_48x48.png" alt="Opera" width="24px" height="24px" /> Opera >= 34, Opera Mini not supported
 - Android Browser >= 4.4
 
 To stay up to date with your installation it's recommended to subscribe the [release feed][github-release-feed].

@@ -1,6 +1,6 @@
 {
   "name": "codimd",
-  "version": "1.3.1",
+  "version": "1.4.1",
   "description": "Realtime collaborative markdown notes on all platforms.",
   "keywords": [
     "Collaborative",
@@ -15,7 +15,7 @@
   "license": "AGPL-3.0",
   "main": "app.js",
   "scripts": {
-    "build": "webpack --config webpack.prod.js --progress --colors --bail",
+    "build": "webpack --config webpack.prod.js --display errors-only -p",
     "dev": "webpack --config webpack.dev.js --progress --colors --watch",
     "doctoc": "doctoc --title='# Table of Contents' README.md",
     "lint": "standard",
@@ -38,6 +38,7 @@
     "@hackmd/lz-string": "~1.4.4",
     "@hackmd/meta-marked": "~0.4.4",
     "@passport-next/passport-openid": "~1.0.0",
+    "@susisu/mte-kernel": "^2.1.0",
     "archiver": "~3.1.1",
     "async": "~3.1.0",
     "aws-sdk": "~2.503.0",
@@ -55,7 +56,6 @@
     "cookie-parser": "~1.4.4",
     "deep-freeze": "~0.0.1",
     "ejs": "~2.6.2",
-    "emojify.js": "~1.1.0",
     "express": "~4.17.1",
     "express-session": "~1.16.2",
     "file-saver": "~2.0.2",
@@ -67,6 +67,7 @@
     "handlebars": "~4.1.2",
     "helmet": "~3.20.0",
     "highlight.js": "~9.15.9",
+    "https-proxy-agent": "^3.0.1",
     "i18n": "~0.8.3",
     "ionicons": "~2.0.1",
     "isomorphic-fetch": "~2.2.1",
@@ -84,7 +85,6 @@
     "markdown-it-abbr": "~1.0.4",
     "markdown-it-container": "~2.0.0",
     "markdown-it-deflist": "~2.0.3",
-    "markdown-it-emoji": "~1.4.0",
     "markdown-it-footnote": "~3.0.2",
     "markdown-it-imsize": "~2.0.1",
     "markdown-it-ins": "~2.0.0",
@@ -94,16 +94,19 @@
     "markdown-it-sub": "~1.0.0",
     "markdown-it-sup": "~1.0.0",
     "markdown-pdf": "~9.0.0",
+    "markdownlint": "^0.17.0",
     "mathjax": "~2.7.5",
     "mattermost-redux": "~5.13.0",
     "mermaid": "~8.2.3",
     "method-override": "~3.0.0",
     "minimist": "~1.2.0",
-    "minio": "~7.0.10",
+    "minio": "^7.0.12",
     "moment": "~2.24.0",
     "morgan": "~1.9.1",
     "mysql": "~2.17.1",
+    "mysql2": "^2.0.1",
     "passport": "~0.4.0",
+    "passport-bitbucket-oauth2": "~0.1.2",
     "passport-dropbox-oauth2": "~1.1.0",
     "passport-facebook": "~2.1.1",
     "passport-github": "~1.1.0",
@@ -127,7 +130,8 @@
     "reveal.js": "~3.7.0",
     "scrypt": "~6.0.3",
     "select2": "~3.5.2-browserify",
-    "sequelize": "5.3.5",
+    "sequelize": "5.21.3",
+    "sequelize-cli": "~5.5.1",
     "shortid": "~2.2.14",
     "socket.io": "~2.2.0",
     "socket.io-client": "~2.2.0",
@@ -151,6 +155,7 @@
     "xss": "~1.0.6"
   },
   "devDependencies": {
+    "@hackmd/emojify.js": "^2.1.0",
     "acorn": "~6.1.1",
     "babel-core": "~6.26.3",
     "babel-loader": "~7.1.4",
@@ -159,6 +164,9 @@
     "babel-runtime": "~6.26.0",
     "copy-webpack-plugin": "~4.5.2",
     "css-loader": "~1.0.0",
+    "dictionary-de": "^2.0.3",
+    "dictionary-de-at": "^2.0.3",
+    "dictionary-de-ch": "^2.0.3",
     "doctoc": "~1.4.0",
     "ejs-loader": "~0.3.1",
     "exports-loader": "~0.7.0",
@@ -170,6 +178,7 @@
     "jsonlint": "~1.6.2",
     "less": "~3.9.0",
     "less-loader": "~4.1.0",
+    "markdown-it-ruby": "^0.1.1",
     "mini-css-extract-plugin": "~0.4.1",
     "mocha": "~5.2.0",
     "mock-require": "~3.0.3",
@@ -177,11 +186,11 @@
     "optimize-css-assets-webpack-plugin": "~5.0.0",
     "power-assert": "~1.6.1",
     "script-loader": "~0.7.2",
-    "sequelize-cli": "~5.4.0",
     "sinon": "~7.3.2",
     "standard": "~13.1.0",
     "string-loader": "~0.0.1",
     "style-loader": "~0.23.1",
+    "typo-js": "^1.0.3",
     "uglifyjs-webpack-plugin": "~1.2.7",
     "url-loader": "~1.0.1",
     "webpack": "~4.39.0",
@@ -199,11 +208,11 @@
   "maintainers": [
     {
       "name": "Max Wu",
-      "email": "jackymaxj@gmail.com"
+      "email": "max@hackmd.io"
     },
     {
-      "name": "Christoph (Sheogorath) Kern",
-      "email": "codimd@sheogorath.shivering-isles.com"
+      "name": "Yukai Huang",
+      "email": "yukai@hackmd.io"
     }
   ],
   "standard": {

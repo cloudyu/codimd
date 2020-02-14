@@ -76,6 +76,7 @@ import { preventXSS } from './render'
 import Editor from './lib/editor'
 
 import getUIElements from './lib/editor/ui-elements'
+import { emojifyImageDir } from './lib/editor/constants'
 import modeType from './lib/modeType'
 import appState from './lib/appState'
 
@@ -3116,6 +3117,27 @@ function matchInContainer (text) {
   }
 }
 
+const textCompleteKeyMap = {
+  Up: function () {
+    return false
+  },
+  Right: function () {
+    editor.doc.cm.execCommand('goCharRight')
+  },
+  Down: function () {
+    return false
+  },
+  Left: function () {
+    editor.doc.cm.execCommand('goCharLeft')
+  },
+  Enter: function () {
+    return false
+  },
+  Backspace: function () {
+    editor.doc.cm.execCommand('delCharBefore')
+  }
+}
+
 $(editor.getInputField())
   .textcomplete([
     { // emoji strategy
@@ -3137,7 +3159,7 @@ $(editor.getInputField())
         callback(list)
       },
       template: function (value) {
-        return '<img class="emoji" src="' + serverurl + '/build/emojify.js/dist/images/basic/' + value + '.png"></img> ' + value
+        return `<img class="emoji" src="${emojifyImageDir}/${value}.png"></img> ${value}`
       },
       replace: function (value) {
         return '$1:' + value + ': '
@@ -3317,29 +3339,10 @@ $(editor.getInputField())
     },
     'textComplete:show': function (e) {
       $(this).data('autocompleting', true)
-      editor.setOption('extraKeys', {
-        Up: function () {
-          return false
-        },
-        Right: function () {
-          editor.doc.cm.execCommand('goCharRight')
-        },
-        Down: function () {
-          return false
-        },
-        Left: function () {
-          editor.doc.cm.execCommand('goCharLeft')
-        },
-        Enter: function () {
-          return false
-        },
-        Backspace: function () {
-          editor.doc.cm.execCommand('delCharBefore')
-        }
-      })
+      editor.addKeyMap(textCompleteKeyMap)
     },
     'textComplete:hide': function (e) {
       $(this).data('autocompleting', false)
-      editor.setOption('extraKeys', editorInstance.defaultExtraKeys)
+      editor.removeKeyMap(textCompleteKeyMap)
     }
   })

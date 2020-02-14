@@ -139,7 +139,7 @@ module.exports = {
         to: 'MathJax/'
       },
       {
-        context: path.join(__dirname, 'node_modules/emojify.js'),
+        context: path.join(__dirname, 'node_modules/@hackmd/emojify.js'),
         from: {
           glob: 'dist/**/*',
           dot: false
@@ -165,7 +165,22 @@ module.exports = {
         context: path.join(__dirname, 'node_modules/reveal.js'),
         from: 'plugin',
         to: 'reveal.js/plugin'
-      }
+      },
+      {
+        context: path.join(__dirname, 'node_modules/dictionary-de'),
+        from: '*',
+        to: 'dictionary-de/'
+      },
+      {
+        context: path.join(__dirname, 'node_modules/dictionary-de-at'),
+        from: '*',
+        to: 'dictionary-de-at/'
+      },
+      {
+        context: path.join(__dirname, 'node_modules/dictionary-de-ch'),
+        from: '*',
+        to: 'dictionary-de-ch/'
+      },
     ]),
     new MiniCssExtractPlugin()
   ],
@@ -203,7 +218,6 @@ module.exports = {
       'script-loader!codemirror',
       'script-loader!inlineAttachment',
       'script-loader!jqueryTextcomplete',
-      'script-loader!codemirrorSpellChecker',
       'script-loader!codemirrorInlineAttachment',
       'script-loader!ot',
       'flowchart.js',
@@ -222,6 +236,15 @@ module.exports = {
       path.join(__dirname, 'node_modules/@hackmd/codemirror/addon/search/matchesonscrollbar.css'),
       path.join(__dirname, 'node_modules/@hackmd/codemirror/theme/monokai.css'),
       path.join(__dirname, 'node_modules/@hackmd/codemirror/theme/one-dark.css'),
+      path.join(__dirname, 'node_modules/@hackmd/codemirror/theme/dracula.css'),
+      path.join(__dirname, 'node_modules/@hackmd/codemirror/theme/material.css'),
+      path.join(__dirname, 'node_modules/@hackmd/codemirror/theme/nord.css'),
+      path.join(__dirname, 'node_modules/@hackmd/codemirror/theme/panda-syntax.css'),
+      path.join(__dirname, 'node_modules/@hackmd/codemirror/theme/solarized.css'),
+      path.join(__dirname, 'public/css/codemirror-extend/ayu-dark.css'),
+      path.join(__dirname, 'public/css/codemirror-extend/ayu-mirage.css'),
+      path.join(__dirname, 'public/css/codemirror-extend/tomorrow-night-bright.css'),
+      path.join(__dirname, 'public/css/codemirror-extend/tomorrow-night-eighties.css'),
       path.join(__dirname, 'node_modules/@hackmd/codemirror/mode/tiddlywiki/tiddlywiki.css'),
       path.join(__dirname, 'node_modules/@hackmd/codemirror/mode/mediawiki/mediawiki.css'),
       path.join(__dirname, 'public/css/github-extract.css'),
@@ -245,17 +268,17 @@ module.exports = {
       'expose-loader?moment!moment',
       'script-loader!handlebars',
       'expose-loader?hljs!highlight.js',
-      'expose-loader?emojify!emojify.js',
+      'emojify.js',
       'script-loader!gist-embed',
       'script-loader!codemirror',
       'script-loader!inlineAttachment',
       'script-loader!jqueryTextcomplete',
-      'script-loader!codemirrorSpellChecker',
       'script-loader!codemirrorInlineAttachment',
       'script-loader!ot',
       'flowchart.js',
       'imports-loader?Raphael=raphael!js-sequence-diagrams',
-      'expose-loader?Viz!viz.js',
+      'script-loader!viz.js',
+      'script-loader!viz.render.js',
       'script-loader!abcjs',
       'script-loader!vega',
       'script-loader!vega-lite',
@@ -289,11 +312,12 @@ module.exports = {
       'expose-loader?moment!moment',
       'script-loader!handlebars',
       'expose-loader?hljs!highlight.js',
-      'expose-loader?emojify!emojify.js',
+      'emojify.js',
       'script-loader!gist-embed',
       'flowchart.js',
       'imports-loader?Raphael=raphael!js-sequence-diagrams',
-      'expose-loader?Viz!viz.js',
+      'script-loader!viz.js',
+      'script-loader!viz.render.js',
       'script-loader!abcjs',
       'script-loader!vega',
       'script-loader!vega-lite',
@@ -330,11 +354,12 @@ module.exports = {
       'expose-loader?moment!moment',
       'script-loader!handlebars',
       'expose-loader?hljs!highlight.js',
-      'expose-loader?emojify!emojify.js',
+      'emojify.js',
       'script-loader!gist-embed',
       'flowchart.js',
       'imports-loader?Raphael=raphael!js-sequence-diagrams',
-      'expose-loader?Viz!viz.js',
+      'script-loader!viz.js',
+      'script-loader!viz.render.js',
       'script-loader!abcjs',
       'script-loader!vega',
       'script-loader!vega-lite',
@@ -359,7 +384,6 @@ module.exports = {
       codemirror: path.join(__dirname, 'node_modules/@hackmd/codemirror/codemirror.min.js'),
       inlineAttachment: path.join(__dirname, 'public/vendor/inlineAttachment/inline-attachment.js'),
       jqueryTextcomplete: path.join(__dirname, 'public/vendor/jquery-textcomplete/jquery.textcomplete.js'),
-      codemirrorSpellChecker: path.join(__dirname, 'public/vendor/codemirror-spell-checker/spell-checker.min.js'),
       codemirrorInlineAttachment: path.join(__dirname, 'public/vendor/inlineAttachment/codemirror.inline-attachment.js'),
       ot: path.join(__dirname, 'public/vendor/ot/ot.min.js'),
       mermaid: path.join(__dirname, 'node_modules/mermaid/dist/mermaid.min.js'),
@@ -374,7 +398,12 @@ module.exports = {
       'js-sequence-diagrams': path.join(__dirname, 'node_modules/@hackmd/js-sequence-diagrams/build/main.js'),
       vega: path.join(__dirname, 'node_modules/vega/build/vega.min.js'),
       'vega-lite': path.join(__dirname, 'node_modules/vega-lite/build/vega-lite.min.js'),
-      'vega-embed': path.join(__dirname, 'node_modules/vega-embed/build/vega-embed.min.js')
+      'vega-embed': path.join(__dirname, 'node_modules/vega-embed/build/vega-embed.min.js'),
+      'emojify.js': path.join(__dirname, 'node_modules/@hackmd/emojify.js/dist/js/emojify-browser.min.js'),
+      'markdown-it': path.join(__dirname, 'node_modules/markdown-it/dist/markdown-it.js'),
+      'viz.js': path.join(__dirname, 'node_modules/viz.js/viz.js'),
+      'viz.render.js': path.join(__dirname, 'node_modules/viz.js/full.render.js'),
+      markdownlint: path.join(__dirname, 'node_modules/markdownlint/demo/markdownlint-browser.js')
     }
   },
 
@@ -390,6 +419,9 @@ module.exports = {
 
   module: {
     rules: [{
+      test: /\.mjs$/,
+      type: 'javascript/auto'
+    }, {
       test: /\.js$/,
       use: [{ loader: 'babel-loader' }],
       exclude: [/node_modules/, /public\/vendor/]
@@ -458,6 +490,11 @@ module.exports = {
       use: [{
         loader: 'url-loader',
         options: { limit: '10000', mimetype: 'image/gif' }
+      }]
+    }, {
+      test: /@hackmd\/codemirror\/addon\/lint\/lint/,
+      use: [{
+        loader: 'script-loader'
       }]
     }]
   },

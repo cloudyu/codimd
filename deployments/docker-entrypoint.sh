@@ -1,9 +1,21 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -euo pipefail
 
-pcheck -constr "$CMD_DB_URL"
+if [[ "$#" -gt 0 ]]; then
+    exec "$@"
+    exit $?
+fi
 
-sequelize db:migrate
+# check database and redis is ready
+pcheck -env CMD_DB_URL
 
+# run DB migrate
+NEED_MIGRATE=${CMD_AUTO_MIGRATE:=true}
+
+if [[ "$NEED_MIGRATE" = "true" ]] && [[ -f .sequelizerc ]] ; then
+    npx sequelize db:migrate
+fi
+
+# start application
 node app.js
